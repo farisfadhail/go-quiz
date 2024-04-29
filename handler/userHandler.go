@@ -128,6 +128,15 @@ func UserHandlerUpdate(ctx *fiber.Ctx) error {
 		})
 	}
 
+	//userResponse := response.UserResponse{
+	//	ID:        user.ID,
+	//	Username:  user.Username,
+	//	Email:     user.Email,
+	//	Role:      user.Role,
+	//	CreatedAt: user.CreatedAt,
+	//	UpdatedAt: user.UpdatedAt,
+	//}
+
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "USER UPDATED",
 		"data":    user,
