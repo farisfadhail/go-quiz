@@ -18,12 +18,14 @@ func RouteInit(app *fiber.App) {
 	api.Post("/register", handler.UserHandlerCreate).Name("register")
 
 	// User Routes
-	user := api.Group("/user", middleware.Authenticated, middleware.IsAdmin)
-	user.Get("/", handler.UserHandlerGetAll).Name("user.index")
+	admin := api.Group("/admin/user", middleware.Authenticated, middleware.IsAdmin)
+	admin.Get("/", handler.UserHandlerGetAll).Name("user.index")
+	admin.Delete("/:userId/delete", handler.UserHandlerDelete).Name("user.destroy")
+
+	user := api.Group("/user", middleware.Authenticated)
 	user.Get("/:userId", handler.UserHandlerShowById).Name("user.show")
-	user.Put("/:userId", handler.UserHandlerUpdate).Name("user.update")
-	user.Delete("/:userId", handler.UserHandlerDelete).Name("user.destroy")
-	user.Put("/:userId/update-email", handler.UserHandlerUpdateEmail, middleware.Authenticated).Name("user.update-email")
+	user.Put("/:userId/update", handler.UserHandlerUpdate).Name("user.update")
+	user.Put("/:userId/update-email", handler.UserHandlerUpdateEmail).Name("user.update-email")
 
 	// Question Routes
 	question := api.Group("/question", middleware.Authenticated)
@@ -31,7 +33,7 @@ func RouteInit(app *fiber.App) {
 	question.Post("/create", handler.QuestionHandlerCreate).Name("question.store")
 	question.Get("/:questionId", handler.QuestionHandlerShowById).Name("question.show")
 	question.Put("/:questionId/update", handler.QuestionHandlerUpdate).Name("question.update")
-	question.Delete("/:questionId", handler.QuestionHandlerDelete).Name("question.destroy")
+	question.Delete("/:questionId/delete", handler.QuestionHandlerDelete).Name("question.destroy")
 
 	// Answer Routes
 	answer := api.Group("/answer", middleware.Authenticated)
@@ -39,5 +41,5 @@ func RouteInit(app *fiber.App) {
 	answer.Post("/create", handler.AnswerHandlerCreate).Name("answer.store")
 	answer.Get("/:answerId", handler.QuestionHandlerShowById).Name("answer.show")
 	answer.Put("/:answerId/update", handler.AnswerHandlerUpdate).Name("answer.update")
-	answer.Delete(":answerId", handler.AnswerHandlerDelete).Name("answer.destroy")
+	answer.Delete("/:answerId/delete", handler.AnswerHandlerDelete).Name("answer.destroy")
 }
